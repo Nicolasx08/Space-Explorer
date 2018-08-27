@@ -1,8 +1,6 @@
 package Vaisseau;
 
-import Objet.Main.main;
 import Objet.Objet;
-import Planete.Davidium;
 import Planete.Planet;
 import Planete.Terre;
 

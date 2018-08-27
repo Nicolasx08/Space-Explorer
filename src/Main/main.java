@@ -1,9 +1,8 @@
-package Objet.Main;
+package Main;
 
 import Planete.*;
 import Vaisseau.Vaisseau;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
 
