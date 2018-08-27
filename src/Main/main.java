@@ -10,7 +10,8 @@ public class main {
     public static Scanner sc = new Scanner(System.in);
     public static Planet terre = new Planet();
     public static Vaisseau vaisseau= new Vaisseau(terre);
-    public static Stack<Vaisseau> retourArriereListe= new Stack<>();
+    public static Stack<Vaisseau> vaisseauRetour= new Stack<>();
+
     public static void main(String[] args) {
         System.out.println("Bonjour, le but est de parcourir le plus de planète possible, chaque planète vaut 1 point!");
         System.out.println("Quelle est le nom de votre vaisseau?");
@@ -53,57 +54,48 @@ public class main {
 
         return rep;
     }
-    public static void choixSwitch(int choix, Vaisseau vaisseau){
+    public static void choixSwitch(int choix, Vaisseau vaisso){
         switch (choix){
-            case 1: System.out.println("nom: "+vaisseau.getNom());
-                System.out.println("Gaz: " +vaisseau.getGaz());
-                System.out.println("Santé: "+vaisseau.getSante());
+            case 1: System.out.println("nom: "+vaisso.getNom());
+                System.out.println("Gaz: " +vaisso.getGaz());
+                System.out.println("Santé: "+vaisso.getSante());
                 System.out.println("Inventaire: ");
-                int a=vaisseau.getInventaire().size();
-                if (vaisseau.getInventaire().size()>=1){
+                int a=vaisso.getInventaire().size();
+                if (vaisso.getInventaire().size()>=1){
                     for (int i=0;i<a;i++){
-                        System.out.println(i+"- "+ vaisseau.getInventaire().get(i).getNom());
+                        System.out.println(i+"- "+ vaisso.getInventaire().get(i).getNom());
                     }
                 }
 
-                System.out.println("Planète courante: "+vaisseau.getPlanete().peek().getNom());
+                System.out.println("Planète courante: "+vaisso.getPlanete().peek().getNom());
                 break;
             case 2:
 
                 int number=(int)(Math.random()*4+1);
+                vaisseauRetour.push(Vaisseau.saveVaisseau(vaisso));
                 switch (number){
-                    case 1:
-                        retourArriereListe.push(Vaisseau.saveVaisseau(vaisseau));
-                        terre.explorer(vaisseau,new Davidium());
+                    case 1: terre.explorer(vaisso,new Davidium());
                         break;
-                    case 2:
-                        retourArriereListe.push(Vaisseau.saveVaisseau(vaisseau));
-                        terre.explorer(vaisseau,new Socrative());
+                    case 2: terre.explorer(vaisso,new Socrative());
                         break;
-                    case 3:
-                        retourArriereListe.push(Vaisseau.saveVaisseau(vaisseau));
-                        terre.explorer(vaisseau, new Simonium());
+                    case 3: terre.explorer(vaisso, new Simonium());
                         break;
-                    case 4:
-                        retourArriereListe.push(Vaisseau.saveVaisseau(vaisseau));
-                        terre.explorer(vaisseau,new Pluton());
+                    case 4: terre.explorer(vaisso,new Pluton());
                         break;
-                    case 5:
-                        retourArriereListe.push(Vaisseau.saveVaisseau(vaisseau));
-                        terre.explorer(vaisseau,new Marxime());
+                    case 5:terre.explorer(vaisso,new Marxime());
                         break;
                 }
                 break;
             case 3:
-                if (vaisseau.getInventaire().size()!=0){
+                if (vaisso.getInventaire().size()!=0){
                     System.out.println("Quelle objet voulez-vous utiliser?");
                     boolean ok=true;
                     boolean ok1=true;
                     int rep=0;
                     while (ok){
                         while (ok1){
-                            for (int i=0;i<vaisseau.getInventaire().size();i++){
-                                System.out.println((i+1)+"- "+ vaisseau.getInventaire().get(i).getNom());
+                            for (int i=0;i<vaisso.getInventaire().size();i++){
+                                System.out.println((i+1)+"- "+ vaisso.getInventaire().get(i).getNom());
                             }
 
                             try {
@@ -119,16 +111,16 @@ public class main {
                         }
 
 
-                        if (rep<=vaisseau.getInventaire().size() && rep>=0){
-                            vaisseau.setSante(vaisseau.getSante()+vaisseau.getInventaire().get(rep-1).getSante());
-                            if (vaisseau.getSante()>100){
-                                vaisseau.setSante(100);
+                        if (rep<=vaisso.getInventaire().size() && rep>=0){
+                            vaisso.setSante(vaisso.getSante()+vaisso.getInventaire().get(rep-1).getSante());
+                            if (vaisso.getSante()>100){
+                                vaisso.setSante(100);
                             }
-                            vaisseau.setGaz(vaisseau.getGaz()+vaisseau.getInventaire().get(rep-1).getGaz());
-                            if (vaisseau.getGaz()>1000){
-                                vaisseau.setGaz(1000);
+                            vaisso.setGaz(vaisso.getGaz()+vaisso.getInventaire().get(rep-1).getGaz());
+                            if (vaisso.getGaz()>1000){
+                                vaisso.setGaz(1000);
                             }
-                            vaisseau.getInventaire().remove(rep-1);
+                            vaisso.getInventaire().remove(rep-1);
                             ok=false;
                         }
                         else {
@@ -140,8 +132,8 @@ public class main {
                 }
                 break;
             case 4:
-                if (retourArriereListe.size()!=0){
-                    vaisseau=last();
+                if (vaisseauRetour.size()!=0){
+                    vaisseau=vaisseauRetour.pop();
                 }
                 else {
                     System.out.println("c'est le vaisseau de votre première action.");
@@ -170,20 +162,5 @@ public class main {
             System.out.print(trajet.pop().getNom()+" -->");
         }
     }
-    public static Vaisseau last(){
-        Vaisseau vaisseau2= new Vaisseau(new Terre());
-        vaisseau2.setSante(retourArriereListe.peek().getSante());
-        vaisseau2.setNom(retourArriereListe.peek().getNom());
-        vaisseau2.setGaz(retourArriereListe.peek().getGaz());
-        int a= retourArriereListe.peek().getInventaire().size();
-        for (int i=0;i<a;i++){
-            vaisseau2.getInventaire().add(retourArriereListe.peek().getInventaire().get(i));
-        }
-        a=retourArriereListe.peek().getPlanete().size();
-        for (int i=0;i<a;i++){
-            vaisseau2.getPlanete().push(retourArriereListe.peek().getPlanete().pop());
-        }
-        retourArriereListe.pop();
-        return vaisseau2;
-    }
+
 }
